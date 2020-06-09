@@ -1,0 +1,97 @@
+---
+title: "Shiny Application"
+date: "09/06/2020"
+output: ioslides_presentation
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Coronavirus (COVID-19) Cases
+
+The COVID-19 pandemic in India is part of the worldwide pandemic of coronavirus disease 2019 (COVID-19) caused by severe acute respiratory syndrome coronavirus 2(SARS-CoV-2) .The first case of COVID-19 in India, which originated from China, was reported on 30 January 2020. As of 9 June 2020, the MoH&FW has confirmed a total of 266,598 cases, 129,215 recoveries (including 1 migration) and 7,466 deaths in the country.
+India currently has the largest number of confirmed cases in Asia,with the number of total confirmed cases breaching the 100,000 mark on 19 May and 200,000 on 3 June.
+
+
+## points plot on X-axis
+
+- date
+- median_age
+
+## points plot on Y-axis
+
+- total_case
+- new_case
+- total_death
+- new_death
+- covid_death_rate
+
+
+## Interactive Plot
+
+```{r Covid}
+ titlePanel("Cases of Covid-19") 
+     sidebarLayout(     
+         sidebarPanel(
+         #input using radiobuttons 
+             radioButtons("C", "Select Country:",                    
+                          list("India"="India"),width = "200px"
+                          ),
+              radioButtons("X", "Select X-axis:",                    
+                          list( "date"='b', "median_age"='e'
+                               ),width = "400px"
+                          ),
+              radioButtons("Y", "Select Y-axis:",                    
+                           list( "total_case"='f', "new_case"='g',
+                                "total_death"='h', "new_death"='i',"cvd_death_rate"='j'
+                           ),width = "400px"
+            ),
+        ),   
+    # Show a plot of the generated distribution       
+    mainPanel( 
+             plotOutput("distPlot") 
+             )     
+    )   
+
+output$distPlot<-renderPlot({ 
+        #creating distPlot  
+        if(input$X=='b') { i<-2 }    
+        if(input$X=='e') { i<-5 }     
+        if(input$Y=='f') { j<-6 }     
+        if(input$Y=='g') { j<-7 }     
+        if(input$Y=='h') { j<-8 }     
+        if(input$Y=='i') { j<-9 }   
+        if(input$Y=='j') {j<-10}
+
+        #reading covid cases dataset    
+        library(dplyr)
+        library(graphics)
+        covid<-read.csv("D:/Data Science/Shiny Project/owid-covid-data.csv")  
+        result<-data.frame(filter(group_by(covid,location),location==input$C))
+        result_without_NA<-na.omit(result)
+        if(i==2){
+            X    <- as.Date(result_without_NA$date)
+        }
+        else{
+            X <-result_without_NA$median_age
+        }
+           
+        Y    <- result_without_NA[,j]
+        #Calculate the range of X
+        rangex<-range(X)
+        #calculate tthe range of Y
+        rangey<-range(Y)
+        #set the xlim and ylim of a plot
+        plot.window(rangex,rangey)
+        #draw a plot 
+        plot(X,Y,pch=20,col="red",xlab = ,main ="Covid case in India")
+
+        }) 
+       
+```
+
+
+
+
