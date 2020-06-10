@@ -30,6 +30,10 @@ library(shiny)
         ),   
     # Show a plot of the generated distribution       
     mainPanel( 
+             h3("First, you have to select x-axis and Y-axis points from sidebar Panel, 
+             and you see the plot on the main Panel.
+             Observed changes in a plot by changing the x-axis and Y-axis points"),
+             hr(),
              plotOutput("distPlot")
              )     
     )   
